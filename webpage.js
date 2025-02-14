@@ -29,7 +29,7 @@ var itemsData = [
     ,
     {
         id: 4,
-        Name: " HP Victus 16-r0073cl Gaming & Entertainment Laptop",
+        Name: " HP Victus", //16-r0073cl Gaming & Entertainment Laptop
         size: " All",
         color: " Black",
         image: "https://gamingxperts.pk/1203-large_default/hp-victus-16-r0073cl-gaming-entertainment-laptop.jpg",
@@ -112,7 +112,7 @@ var itemsData = [
 
 
 
-var cardArea = document.getElementById("cardArea")
+var cardArea = document.getElementById("cardArea") || ''
 for (var i = 0; i < itemsData.length; i++) {
     cardArea.innerHTML += `
     <div class="card">
@@ -135,30 +135,98 @@ for (var i = 0; i < itemsData.length; i++) {
 
 
 var currentUser = JSON.parse(window.localStorage.getItem("currentUser"));
+var addToCard = JSON.parse(window.localStorage.getItem('addToCard')) || [];
 var getData = window.localStorage.getItem("userdata");
 var getParseData = JSON.parse(getData);
-console.log(itemsData[0].id)
+console.log(addToCard);
+
 
 function add(e) {
-    var idNode = e.parentNode.childNodes[2].textContent;
-    console.log(idNode);
-    for (var j = 0; j < itemsData.length; j++) {
-        if (idNode == itemsData[j].id) {
-            console.log("hellow")
-            for (var k = 0; k < getParseData.length; k++) {
-                if (currentUser.email == getParseData[k].email) {
-                    if (!getParseData[k].CardId) {
-                        getParseData[k].CardId = [];
-                    }
-                    getParseData[k].CardId.push(itemsData[j]);
-                    window.localStorage.setItem("userdata", JSON.stringify(getParseData));
-                }
-            }
-        }
+
+    // Check user can signup or not 
+
+   if(!currentUser){
+    alert('SignIn First')
+    window.location.href = './login.html'
+   }
+   else{
+    
+    var productName = e.parentNode.childNodes[2].textContent;
+    // console.log(productName);
+
+    // for (var j = 0; j < itemsData.length; j++) {
+    //     if (idNode == itemsData[j].id) {
+    //         console.log("hellow")
+    //         for (var k = 0; k < getParseData.length; k++) {
+    //             if (currentUser.email == getParseData[k].email) {
+    //                 if (!getParseData[k].CardId) {
+    //                     getParseData[k].CardId = [];
+    //                 }
+    //                 getParseData[k].CardId.push(itemsData[j]);
+    //                 window.localStorage.setItem("userdata", JSON.stringify(getParseData));
+    //             }
+    //         }
+    //     }
+    // }
+
+    itemsData.some((item) => {
+       if(item.Name === productName){
+        // console.log( 'Iff'  + item.Name);
+        addToCard.push(item)
+        window.localStorage.setItem('addToCard', JSON.stringify(addToCard))   // Push Kra rha Orders [] Ko localstorage ma
+        return true;        /// Return true break kr rha 
     }
+    else{
+        // console.log( "Else" + item.Name);
+        return false;
+    }
+})
+
     alert("✅Added to Cart")
+}
 }
 
 
+// Card.html files ma Add To Card Items Print Krwa rha
 
+if(window.location.href.indexOf('card.html') != -1){
+    console.log('card fles');
+   
+   let addToCardArr = JSON.parse(window.localStorage.getItem('addToCard'))
+   let itemDisplayDiv = document.querySelector('.item_display')
+   
+ addToCard.forEach(item => {
+    // console.log(item);
+    
+    itemDisplayDiv.innerHTML += `
+         <div class="itemsmain-flex">
+            <img src=${item.image} alt="">
+            <h3>${item.Name}</h3>
+            <p>${item.price}</p>
+            <p>${item.size}</p>
+            <button onClick='AddToCardRemove(this)'>delete</button>
+     </div>
+    `
+ });
+  
+}
 
+function AddToCardRemove(e){
+    let itemName = e.parentNode.childNodes[3].innerText;
+    console.log(itemName);
+    
+    let addToCardArr = JSON.parse(window.localStorage.getItem('addToCard'));
+ 
+    let filterAddToCardItem  = addToCardArr.filter((item) => {
+      if(itemName !== item.Name.trim()){
+       return item
+      }
+      else{
+        e.parentNode.remove();   // delete item ui se remove kr rha
+      }
+        
+   })
+ 
+   window.localStorage.setItem('addToCard', JSON.stringify(filterAddToCardItem))
+ 
+}

@@ -1,7 +1,15 @@
 
 // Signup work is here *********************
 
-var userdata = JSON.parse(window.localStorage.getItem('userdata') || '[]');
+var userdata = JSON.parse(window.localStorage.getItem('userdata'))|| [{
+  firstName : 'Admin',
+  lastName : 'Shehriyar',
+  email : 'admin@gmail.com',
+  phone : '01235987622',
+  password : '12345'
+}];
+
+window.localStorage.setItem('userdata', JSON.stringify(userdata))    // Admin Deatails push first 
 
 function signup() {
   var firstName = document.getElementById('firstName').value.trim();
@@ -43,9 +51,15 @@ function logIn() {
     var getData = window.localStorage.getItem("userdata");
     var getParseData = JSON.parse(getData);
     var login = false;
-  
-    if(lEmail === "admin@gmail.com" && lPassword === "12345"){
-      window.location.href="dashboard.html"
+    
+    // console.log(lEmail,lPassword);
+
+    if(getParseData.length > 1 || 
+       (lEmail === getParseData[0].email && lPassword === getParseData[0].password))
+    {
+    if(lEmail === getParseData[0].email && lPassword === getParseData[0].password){
+      window.location.href="./dashboard.html"
+      window.localStorage.setItem("currentUser", JSON.stringify(getParseData[0]));
     } else{
       for (var k = 0;k < getParseData.length; k++) {
         console.log(k)
@@ -62,5 +76,11 @@ function logIn() {
         alert("Your email or password doesn't match");
       }
     }
-  }
+}
+else{
+  alert('SignUp First')
+}
+}
+
+
   

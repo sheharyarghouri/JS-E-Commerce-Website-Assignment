@@ -135,30 +135,61 @@ for (var i = 0; i < itemsData.length; i++) {
 
 
 var currentUser = JSON.parse(window.localStorage.getItem("currentUser"));
+var addToCard = JSON.parse(window.localStorage.getItem('addToCard')) || [];
 var getData = window.localStorage.getItem("userdata");
 var getParseData = JSON.parse(getData);
-console.log(itemsData[0].id)
 
 function add(e) {
-    var idNode = e.parentNode.childNodes[2].textContent;
-    console.log(idNode);
-    for (var j = 0; j < itemsData.length; j++) {
-        if (idNode == itemsData[j].id) {
-            console.log("hellow")
-            for (var k = 0; k < getParseData.length; k++) {
-                if (currentUser.email == getParseData[k].email) {
-                    if (!getParseData[k].CardId) {
-                        getParseData[k].CardId = [];
-                    }
-                    getParseData[k].CardId.push(itemsData[j]);
-                    window.localStorage.setItem("userdata", JSON.stringify(getParseData));
-                }
-            }
-        }
+
+    // Check user can signup or not 
+
+   if(!currentUser){
+    alert('SignIn First')
+    window.location.href = './login.html'
+   }
+   else{
+    
+    var productName = e.parentNode.childNodes[2].textContent;
+    // console.log(productName);
+
+    // for (var j = 0; j < itemsData.length; j++) {
+    //     if (idNode == itemsData[j].id) {
+    //         console.log("hellow")
+    //         for (var k = 0; k < getParseData.length; k++) {
+    //             if (currentUser.email == getParseData[k].email) {
+    //                 if (!getParseData[k].CardId) {
+    //                     getParseData[k].CardId = [];
+    //                 }
+    //                 getParseData[k].CardId.push(itemsData[j]);
+    //                 window.localStorage.setItem("userdata", JSON.stringify(getParseData));
+    //             }
+    //         }
+    //     }
+    // }
+
+    itemsData.some((item) => {
+       if(item.Name === productName){
+        // console.log( 'Iff'  + item.Name);
+        addToCard.push(item)
+        window.localStorage.setItem('addToCard', JSON.stringify(addToCard))   // Push Kra rha Orders [] Ko localstorage ma
+        return true;        /// Return true break kr rha 
     }
+    else{
+        // console.log( "Else" + item.Name);
+        return false;
+    }
+})
+
     alert("✅Added to Cart")
+}
 }
 
 
+// Card.html files ma Add To Card Items Print Krwa rha
 
+function  AddtoCardItems (){
+    window.location.href = './card.html'  // card.html ma redirect krwa rha 
+
+    let table = document.getElementById('Add_to_card_items_table')
+}
 

@@ -79,6 +79,7 @@ function logIn() {
 }
 else{
   alert('SignUp First')
+  window.location.href = './signup.html'
 }
 }
 

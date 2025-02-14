@@ -230,3 +230,29 @@ function AddToCardRemove(e){
    window.localStorage.setItem('addToCard', JSON.stringify(filterAddToCardItem))
  
 }
+
+//  <----- Orders Donee Function ----->
+
+function purchase() {
+    alert('Order Done');
+    var orders = JSON.parse(window.localStorage.getItem("Orders")) || [];
+    var getProductsCistomer = JSON.parse(window.localStorage.getItem("addToCard"));
+  
+    
+    for (var i = 0; i < getProductsCistomer.length; i++) {
+      orders.push(getProductsCistomer[i]);
+    }
+   
+    
+    getProductsCistomer.length = 0;
+    
+    window.localStorage.setItem("addToCard",JSON.stringify(getProductsCistomer));
+    window.localStorage.setItem("Orders", JSON.stringify(orders));
+  
+    var itemsHtml = document.querySelectorAll(".itemsmain-flex");
+      
+       itemsHtml.forEach((item) => {
+          item.remove();
+        })
+    
+}
